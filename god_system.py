@@ -6,11 +6,10 @@ import economy_system
 import valorant_system
 
 secrets = {
-    'stable': 'stable_token',
-    'beta': 'beta_token'
+    'stable': 'MTIxNjA4NTY0NzM0NjEwNjU4OQ.G-KfG-.P7TsaNhX2uDuDepY8eWuoObFhjZ6t7ofYiesls',
+    'beta': 'MTIxNjg2MzIyNTA2NTUwODk0NQ.GIiWia.vPmOp8GWMOhDIK_AQCZgvyVsDjAxIBQ_an_Smg'
 }
-bot = commands.Bot(command_prefix='.', help_command=None, intents=disnake.Intents.all(),
-                   test_guilds=[000, 000, 000])
+bot = commands.Bot(command_prefix='.', help_command=None, intents=disnake.Intents.all())
 
 
 @bot.event
@@ -83,7 +82,7 @@ async def on_slash_command_error(inter, error):
 
 @bot.slash_command(description='Регистрация в боте')
 async def registration(inter):
-    if economy_system.on_reg(user_id=inter.user.id):
+    if economy_system.on_reg(user_id=inter.author.id):
         await inter.send(embed=disnake.Embed(title='Успешно', description='Вы успешно зарегистрировались в боте.\n'
                                                                           'Ваш стартовый баланс: 10.000',
                                              color=0xb2b2b2))
@@ -238,15 +237,20 @@ async def godgive(inter, amount: int, member: disnake.Member):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def godtake(inter, amount: int, member: disnake.Member):
-    economy_system.remove(user_id=member.id, amount=amount)
     await inter.message.delete()
-    await inter.send(embed=disnake.Embed(title=f'Успешно', description=f'<@{member.id}>, система бога наказала вас.\n'
-                                                                       f'С вашего счета исчезло: '
-                                                                       f'{"{:,}".format(amount).replace(",", ".")}\n\n'
-                                                                       f'Ваш текущий баланс: '
-                                                                       f'{economy_system.balance(member.id)}',
-                                         color=0xb2b2b2))
-    print(f'[GOD SYSTEM] [ECONOMY] система бога наказывает {member.id} ({amount})')
+    if economy_system.remove(user_id=member.id, amount=amount):
+        await inter.send(embed=disnake.Embed(title=f'Успешно',
+                                             description=f'<@{member.id}>, система бога наказала вас.\n'
+                                                         f'С вашего счета исчезло: '
+                                                         f'{"{:,}".format(amount).replace(",", ".")}\n\n'
+                                                         f'Ваш текущий баланс: '
+                                                         f'{economy_system.balance(member.id)}', color=0xb2b2b2))
+        print(f'[GOD SYSTEM] [ECONOMY] система бога наказывает {member.id} ({amount})')
+    else:
+        await inter.send(embed=disnake.Embed(title=f'Ошибка', description=f'Пользователь не найден в базе данных.',
+                                             color=0xb2b2b2))
+        print(f'[GOD SYSTEM] [ECONOMY] система бога пытается наказать {member.id} ({amount}), но не находит его в базе'
+              f'данных')
 
 
 # ---------- [ADM] ---------- #
@@ -385,15 +389,18 @@ async def about(inter):
     pre_embed.add_field(name='VALORANT API by',
                         value='[Henrik Mertens](https://github.com/Henrik-3/unofficial-valorant-api)')
     pre_embed.add_field(name='Hosted on', value='[pylexnodes.net](https://client.pylexnodes.net/)')
-    pre_embed.add_field(name='Source code', value='soon', inline=False)
+    pre_embed.add_field(name='Source code', value='[github.com](https://github.com/Legionidk/GOD-SYSTEM-Bot)',
+                        inline=False)
     pre_embed.set_image(file=disnake.File('png/main.png'))
     pre_embed.set_footer(text='lgnlgnlgn')
     await inter.send(embed=pre_embed)
+    print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает информацию о боте')
+
 
 # ---------- [VALORANT] ---------- #
 
 
-@bot.slash_command(description='Краткий обзор профиля Valorant')
+@bot.slash_command(description='Краткий обзор профиля VALORANT')
 async def valstats(inter, name: str = commands.Param(name='ник'), tag: str = commands.Param(name='тег'),
                    region: str = commands.Param(choices=['AP', 'BR', 'EU', 'KR', 'LATAM', 'NA'], name='регион')):
     stats = valorant_system.get_player_info(name=name, tag=tag, region=region)
@@ -459,4 +466,4 @@ async def valmatches(inter, name: str = commands.Param(name='ник'), tag: str 
               f'({name}#{tag}, {region}), но получает ошибку (игрок не найден)')
 
 
-bot.run(secrets['beta'])
+bot.run(secrets['stable'])
