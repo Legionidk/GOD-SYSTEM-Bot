@@ -1,0 +1,27 @@
+{
+  "Example": {
+    "title": "test title",
+    "desc": "test desc",
+    "fields_number": 2,
+    "field_0": {
+      "name": "test field one",
+      "value": "test field one value"
+    },
+    "field_1": {
+      "name": "test field two",
+      "value": "test field two value"
+    },
+    "image": "put some png here",
+    "buttons_number": 2,
+	"button_0": {
+      "label": "test button one",
+      "url": "https://youtu.be/5rSrIMqw97s?si=b8BIEcjhMD9-ro-3"
+    },
+	"button_1": {
+      "label": "test button two",
+      "url": "https://youtu.be/5rSrIMqw97s?si=b8BIEcjhMD9-ro-3"
+    },
+    "footer": "true",
+    "text": "lgnlgnlgn"
+  }
+}
