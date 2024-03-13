@@ -6,8 +6,8 @@ import economy_system
 import valorant_system
 
 secrets = {
-    'stable': 'MTIxNjA4NTY0NzM0NjEwNjU4OQ.G-KfG-.P7TsaNhX2uDuDepY8eWuoObFhjZ6t7ofYiesls',
-    'beta': 'MTIxNjg2MzIyNTA2NTUwODk0NQ.GIiWia.vPmOp8GWMOhDIK_AQCZgvyVsDjAxIBQ_an_Smg'
+    'stable': 'stable_token',
+    'beta': 'beta_token'
 }
 bot = commands.Bot(command_prefix='.', help_command=None, intents=disnake.Intents.all())
 
