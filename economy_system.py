@@ -38,7 +38,10 @@ def add(user_id, amount):
 
 def remove(user_id, amount):
     data = json.load(open('balances.json'))
-    with open('balances.json', 'w') as file:
-        data[str(user_id)] = data[str(user_id)] - amount
-        json.dump(data, file, indent=2, ensure_ascii=False)
-    return True
+    if str(user_id) not in data:
+        return False
+    else:
+        with open('balances.json', 'w') as file:
+            data[str(user_id)] = data[str(user_id)] - amount
+            json.dump(data, file, indent=2, ensure_ascii=False)
+        return True

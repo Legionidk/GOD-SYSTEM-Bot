@@ -75,11 +75,10 @@ def get_matches(name, tag, region):
                 'team_a': team_a,
                 'team_b': team_b,
                 'elo': requested_elo_changes['data'][c]['mmr_change_to_last_game'],
+                'rank': requested_elo_changes['data'][c]['currenttierpatched'].split(),
                 'date': f'{requested_elo_changes["data"][c]["date"].split()[1]} '
                         f'{requested_elo_changes["data"][c]["date"].split()[2]} '
-                        f'{requested_elo_changes["data"][c]["date"].split()[3]}\n'
-                        f'({requested_elo_changes["data"][c]["date"].split()[4]}'
-                        f'{requested_elo_changes["data"][c]["date"].split()[5]})'
+                        f'{requested_elo_changes["data"][c]["date"].split()[3]}'
             }
             total_kills += requested_matches['data'][c]['stats']['kills']
             total_deaths += requested_matches['data'][c]['stats']['deaths']

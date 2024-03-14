@@ -9,12 +9,69 @@ secrets = {
     'stable': 'stable_token',
     'beta': 'beta_token'
 }
-bot = commands.Bot(command_prefix='.', help_command=None, intents=disnake.Intents.all())
+bot = commands.Bot(command_prefix='.', help_command=None, intents=disnake.Intents.all(),
+                   status=disnake.Status.do_not_disturb,
+                   activity=disnake.Activity(
+                       name=f'{json.load(open("embed_templates.json"))["О боте"]["desc"]}',
+                       type=disnake.ActivityType.watching))
+
+
+class About(disnake.ui.StringSelect):
+    def __init__(self):
+        options = [
+            disnake.SelectOption(
+                label='О боте', description='Информация о боте'
+            ),
+            disnake.SelectOption(
+                label='Команды экономики', description='Доступные команды из экономики'
+            ),
+            disnake.SelectOption(
+                label='Команды VALORANT', description='Доступные команды из VALORANT'
+            ),
+            disnake.SelectOption(
+                label='Админские команды', description='Команды доступные только администраторам'
+            ),
+            disnake.SelectOption(
+                label='Список изменений', description='Список изменение последнего обновления'
+            ),
+        ]
+
+        super().__init__(
+            placeholder='Выберите вкладку...',
+            min_values=1,
+            max_values=1,
+            options=options,
+        )
+
+    async def callback(self, inter: disnake.MessageInteraction):
+        pre_embed = disnake.Embed(title=f'{json.load(open("embed_templates.json"))[self.values[0]]["title"]}',
+                                  description=f'{json.load(open("embed_templates.json"))[self.values[0]]["desc"]}',
+                                  color=0xb2b2b2)
+        for c in range(json.load(open('embed_templates.json'))[self.values[0]]['fields_number']):
+            if json.load((open('embed_templates.json')))[self.values[0]][f'field_{c}']['inline'] == \
+                    'True':
+                inline = True
+            else:
+                inline = False
+            pre_embed.add_field(
+                name=json.load((open('embed_templates.json')))[f'{self.values[0]}'][f'field_{c}']['name'],
+                value=json.load((
+                    open('embed_templates.json')))[f'{self.values[0]}'][f'field_{c}']['value'],
+                inline=inline)
+        pre_embed.set_image(file=disnake.File('png/main.png'))
+        pre_embed.set_footer(text='lgnlgnlgn')
+        await inter.response.edit_message(embed=pre_embed)
+        print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает информацию о боте (вкладка {self.values[0]})')
+
+
+class AboutView(disnake.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.add_item(About())
 
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=disnake.Status.do_not_disturb)
     print(f'[GOD SYSTEM] Бот запущен')
 
 
@@ -80,7 +137,7 @@ async def on_slash_command_error(inter, error):
 # ---------- [ECONOMY] ---------- #
 
 
-@bot.slash_command(description='Регистрация в боте')
+@bot.slash_command(description='[ECONOMY] Регистрация в боте')
 async def registration(inter):
     if economy_system.on_reg(user_id=inter.author.id):
         await inter.send(embed=disnake.Embed(title='Успешно', description='Вы успешно зарегистрировались в боте.\n'
@@ -96,7 +153,7 @@ async def registration(inter):
               f'(уже есть в бд)')
 
 
-@bot.slash_command(description='Проверка баланса')
+@bot.slash_command(description='[ECONOMY] Проверка баланса')
 async def balance(inter):
     if not economy_system.balance(user_id=inter.author.id):
         await inter.send(embed=disnake.Embed(title='Ошибка', description='Вы не найдены в базе данных бота.\n'
@@ -113,7 +170,7 @@ async def balance(inter):
         print(f'[GOD SYSTEM] [ECONOMY] {inter.author.id} проверяет баланс')
 
 
-@bot.slash_command(description='Перевод пользователю')
+@bot.slash_command(description='[ECONOMY] Перевод пользователю')
 async def transfer(inter, amount: int = commands.Param(name='cумма'),
                    member: disnake.Member = commands.Param(name='получатель')):
     if not economy_system.balance(user_id=inter.author.id):
@@ -146,7 +203,7 @@ async def transfer(inter, amount: int = commands.Param(name='cумма'),
         print(f'[GOD SYSTEM] [ECONOMY] {inter.author.id} успешно переводит some money ({amount}) {member.id}')
 
 
-@bot.slash_command(description='antibomj система которая подкинет тебе money')
+@bot.slash_command(description='[ECONOMY] antibomj система которая подкинет тебе money')
 @commands.cooldown(1, 86400, commands.BucketType.user)
 async def antibomj(inter):
     if not economy_system.balance(user_id=inter.author.id):
@@ -175,7 +232,7 @@ async def antibomj(inter):
         print(f'[GOD SYSTEM] [ECONOMY] {inter.author.id} успешно получает ({amount}) от antibomj системы')
 
 
-@bot.slash_command(description='Работа таксистом')
+@bot.slash_command(description='[ECONOMY] Работа таксистом')
 @commands.cooldown(1, 1800, commands.BucketType.user)
 async def taxi(inter):
     if not economy_system.balance(user_id=inter.author.id):
@@ -197,7 +254,7 @@ async def taxi(inter):
               f'{economy_system.balance(user_id=inter.author.id)}')
 
 
-@bot.slash_command(description='Работа на заводе')
+@bot.slash_command(description='[ECONOMY] Работа на заводе')
 @commands.cooldown(1, 3600, commands.BucketType.user)
 async def factory(inter):
     if not economy_system.balance(user_id=inter.author.id):
@@ -331,76 +388,102 @@ async def clear(inter, amount: int):
 @commands.has_permissions(administrator=True)
 async def embed(inter, template: str):
     await inter.message.delete()
-    pre_components = []
-    if template not in json.load(open('embed_templates.json')):
-        await inter.send(embed=disnake.Embed(title='Ошибка', description='Пресета с таким названием не найдено.',
-                                             color=0xb2b2b2))
-        print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} пытается использовать embed ({template}), но получает ошибку '
-              f'(пресет не найден)')
+    if inter.author.id != 000:
+        await inter.send(embed=disnake.Embed(title='Ошибка', description='Я вас не узнаю! Вам запрещено использование '
+                                                                         'данной команды', color=0xb2b2b2))
+        print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} пытается использовать embed ({template}), '
+              f'но получает ошибку (незнакомец)')
     else:
-        if json.load(open('embed_templates.json'))[template]['desc'] != 'none':
-            pre_embed = disnake.Embed(title=json.load(open('embed_templates.json'))[template]['title'],
-                                      description=json.load(open('embed_templates.json'))[template]['desc'],
-                                      color=0xb2b2b2)
+        if json.load(open("embed_templates.json"))[template]['pass'] == 'true':
+            await inter.send(
+                embed=disnake.Embed(title='Ошибка', description='Этот пресет недоступен для использования в .embed.',
+                                    color=0xb2b2b2))
+            print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} пытается использовать embed ({template}), '
+                  f'но получает ошибку (пресет недоступен)')
         else:
-            pre_embed = disnake.Embed(title=json.load(open('embed_templates.json'))[template]['title'],
-                                      color=0xb2b2b2)
-        if json.load(open('embed_templates.json'))[template]['fields_number'] != 0:
-            for c in range(json.load(open('embed_templates.json'))[template]['fields_number']):
-                pre_embed.add_field(name=json.load(open('embed_templates.json'))[template][f'field_{c}']['name'],
-                                    value=json.load(open('embed_templates.json'))[template][f'field_{c}']['value'],
-                                    inline=False)
-        if json.load(open('embed_templates.json'))[template]['image'] != 'none':
-            pre_embed.set_image(file=disnake.File(json.load(open('embed_templates.json'))[template]['image']))
-        if json.load(open('embed_templates.json'))[template]['footer'] == 'true':
-            pre_embed.set_footer(text=json.load(open('embed_templates.json'))[template]['text'])
-        if json.load(open('embed_templates.json'))[template]['buttons_number'] != 0:
-            for c in range(json.load(open('embed_templates.json'))[template]['buttons_number']):
-                pre_components.append(
-                    disnake.ui.Button(label=json.load(open('embed_templates.json'))[template][f'button_{c}']['label'],
-                                      style=disnake.ButtonStyle.link,
-                                      url=json.load(open('embed_templates.json'))[template][f'button_{c}']['url']))
-            await inter.send(embed=pre_embed, components=pre_components)
-        else:
-            await inter.send(embed=pre_embed)
-        print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} использует embed ({template})')
+            pre_components = []
+            if template not in json.load(open('embed_templates.json')):
+                await inter.send(embed=disnake.Embed(title='Ошибка',
+                                                     description='Пресета с таким названием не найдено.',
+                                                     color=0xb2b2b2))
+                print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} пытается использовать embed ({template}), '
+                      f'но получает ошибку (пресет не найден)')
+            else:
+                pre_embed = disnake.Embed(title=json.load(open('embed_templates.json'))[template]['title'],
+                                          description=json.load(open('embed_templates.json'))[template]['desc'],
+                                          color=0xb2b2b2)
+                if json.load(open('embed_templates.json'))[template]['fields_number'] != 0:
+                    for c in range(json.load(open('embed_templates.json'))[template]['fields_number']):
+                        pre_embed.add_field(name=json.load(open
+                                                           ('embed_templates.json'))[template][f'field_{c}']['name'],
+                                            value=json.load(open
+                                                            ('embed_templates.json'))[template][f'field_{c}']['value'],
+                                            inline=False)
+                if json.load(open('embed_templates.json'))[template]['image'] != 'none':
+                    pre_embed.set_image(file=disnake.File(json.load(open('embed_templates.json'))[template]['image']))
+                if json.load(open('embed_templates.json'))[template]['footer'] == 'true':
+                    pre_embed.set_footer(text=json.load(open('embed_templates.json'))[template]['text'])
+                if json.load(open('embed_templates.json'))[template]['buttons_number'] != 0:
+                    for c in range(json.load(open('embed_templates.json'))[template]['buttons_number']):
+                        pre_components.append(disnake.ui.Button(
+                            label=json.load(open('embed_templates.json'))[template][f'button_{c}']['label'],
+                            style=disnake.ButtonStyle.link,
+                            url=json.load(open('embed_templates.json'))[template][f'button_{c}']['url']))
+                    await inter.send(embed=pre_embed, components=pre_components)
+                else:
+                    await inter.send(embed=pre_embed)
+                print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} использует embed ({template})')
 
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def embeds_view(inter):
     await inter.message.delete()
-    pre_embed = disnake.Embed(title='Список доступных пресетов', color=0xb2b2b2)
-    for c in range(len(json.load(open('embed_templates.json')))):
-        value = json.load(open('embed_templates.json'))[list(json.load(open('embed_templates.json')))[c]]['desc']
-        value2 = json.load(open('embed_templates.json'))[list(json.load(open('embed_templates.json')))[c]]['image']
-        pre_embed.add_field(name=list(json.load(open('embed_templates.json')))[c],
-                            value=f'{value}\n\n{value2}', inline=False)
-    await inter.send(embed=pre_embed)
-    print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает список доступных пресетов для embed')
+    if inter.author.id != 000:
+        await inter.send(embed=disnake.Embed(title='Ошибка', description='Я вас не узнаю! Вам запрещено использование '
+                                                                         'данной команды', color=0xb2b2b2))
+        print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} пытается просмотреть список доступных пресетов для embed, '
+              f'но получает ошибку (незнакомец)')
+    else:
+        pre_embed = disnake.Embed(title='Список доступных пресетов', color=0xb2b2b2)
+        for c in range(len(json.load(open('embed_templates.json')))):
+            if json.load(open('embed_templates.json'))[list(json.load(open('embed_templates.json')))[c]]['pass'] == \
+                    'true':
+                pass
+            else:
+                value = \
+                    json.load(open('embed_templates.json'))[list(json.load(open('embed_templates.json')))[c]]['desc']
+                value2 = \
+                    json.load(open('embed_templates.json'))[list(json.load(open('embed_templates.json')))[c]]['image']
+                pre_embed.add_field(name=list(json.load(open('embed_templates.json')))[c],
+                                    value=f'{value}\n\n{value2}', inline=False)
+        await inter.send(embed=pre_embed)
+        print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает список доступных пресетов для embed')
 
 
-@bot.slash_command(description='Информация о боте')
-async def about(inter):
-    pre_embed = disnake.Embed(title='GOD SYSTEM Bot', description='4friends only v1.0', color=0xb2b2b2)
-    pre_embed.add_field(name='Developed by', value='<@399839515134525440>')
-    pre_embed.add_field(name='Developed on', value=f'Python (disnake)')
-    pre_embed.add_field(name='', value='', inline=False)
-    pre_embed.add_field(name='VALORANT API by',
-                        value='[Henrik Mertens](https://github.com/Henrik-3/unofficial-valorant-api)')
-    pre_embed.add_field(name='Hosted on', value='[pylexnodes.net](https://client.pylexnodes.net/)')
-    pre_embed.add_field(name='Source code', value='[github.com](https://github.com/Legionidk/GOD-SYSTEM-Bot)',
-                        inline=False)
+@bot.slash_command(description='[EMBEDS] Информация о боте и его командах')
+async def newabout(inter):
+    pre_embed = disnake.Embed(title=f'{json.load(open("embed_templates.json"))["О боте"]["title"]}',
+                              description=f'{json.load(open("embed_templates.json"))["О боте"]["desc"]}',
+                              color=0xb2b2b2)
+    for c in range(json.load(open('embed_templates.json'))['О боте']['fields_number']):
+        if json.load((open('embed_templates.json')))['О боте'][f'field_{c}']['inline'] == 'True':
+            inline = True
+        else:
+            inline = False
+        pre_embed.add_field(name=json.load((open('embed_templates.json')))['О боте'][f'field_{c}']['name'],
+                            value=json.load((open('embed_templates.json')))['О боте'][f'field_{c}']['value'],
+                            inline=inline)
     pre_embed.set_image(file=disnake.File('png/main.png'))
     pre_embed.set_footer(text='lgnlgnlgn')
-    await inter.send(embed=pre_embed)
-    print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает информацию о боте')
+    await inter.send(embed=pre_embed, view=AboutView())
+    print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает информацию о боте (первое использование)')
 
 
 # ---------- [VALORANT] ---------- #
 
 
-@bot.slash_command(description='Краткий обзор профиля VALORANT')
+@bot.slash_command(description='[VALORANT] Краткий обзор профиля VALORANT')
 async def valstats(inter, name: str = commands.Param(name='ник'), tag: str = commands.Param(name='тег'),
                    region: str = commands.Param(choices=['AP', 'BR', 'EU', 'KR', 'LATAM', 'NA'], name='регион')):
     stats = valorant_system.get_player_info(name=name, tag=tag, region=region)
@@ -428,7 +511,7 @@ async def valstats(inter, name: str = commands.Param(name='ник'), tag: str = 
               f'({name}#{tag}, {region}), но получает ошибку (игрок не найден)')
 
 
-@bot.slash_command(description='Отображает последний 5 рейтинговых игр')
+@bot.slash_command(description='[VALORANT] Отображает последний 5 рейтинговых игр')
 async def valmatches(inter, name: str = commands.Param(name='ник'), tag: str = commands.Param(name='тег'),
                      region: str = commands.Param(choices=['AP', 'BR', 'EU', 'KR', 'LATAM', 'NA'], name='регион')):
     await inter.response.defer()
@@ -442,15 +525,19 @@ async def valmatches(inter, name: str = commands.Param(name='ник'), tag: str 
         pre_embed.add_field(name='Общее К/Д', value=f'{matches["total_k/d"]}')
         pre_embed.add_field(name='', value='', inline=False)
         for c in range(5):
-            pre_embed.add_field(name=f'{matches[f"game_{c}"]["map"]} ({matches[f"game_{c}"]["character"]})',
-                                value=f'{matches[f"game_{c}"]["date"]}\n'
+            rank_icon = disnake.utils.get(bot.emojis, name=f'{matches[f"game_{c}"]["rank"][0]}_'
+                                                           f'{matches[f"game_{c}"]["rank"][1]}')
+            pre_embed.add_field(name=f'{matches[f"game_{c}"]["date"]}',
+                                value=f'{matches[f"game_{c}"]["map"]}\n'
                                       f'({matches[f"game_{c}"]["team_a"]} - {matches[f"game_{c}"]["team_b"]}) '
-                                      f'{matches[f"game_{c}"]["result"]} ')
-            pre_embed.add_field(name='Индивидуальная статистика',
-                                value=f'Счет: {matches[f"game_{c}"]["score"]}\n'
+                                      f'{matches[f"game_{c}"]["result"]}\n'
+                                      f'({rank_icon}) Эло: {matches[f"game_{c}"]["elo"]}')
+            pre_embed.add_field(name='Личный счет',
+                                value=f'{matches[f"game_{c}"]["score"]}\n'
+                                      f'Агент: {matches[f"game_{c}"]["character"]}\n'
                                       f'(У/С/П) {matches[f"game_{c}"]["kills"]} - '
                                       f'{matches[f"game_{c}"]["deaths"]} - '
-                                      f'{matches[f"game_{c}"]["assists"]}')
+                                      f'{matches[f"game_{c}"]["assists"]}\n')
             pre_embed.add_field(name='', value='', inline=False)
         pre_embed.set_thumbnail(
             url=valorant_system.get_player_info(name=name, tag=tag, region=region)['current_rank_icon'])
@@ -466,4 +553,4 @@ async def valmatches(inter, name: str = commands.Param(name='ник'), tag: str 
               f'({name}#{tag}, {region}), но получает ошибку (игрок не найден)')
 
 
-bot.run(secrets['stable'])
+bot.run(secrets['beta'])
