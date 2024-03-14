@@ -1,4 +1,4 @@
-# GOD SYSTEM Bot ![](https://img.shields.io/badge/1.0-7393B3)
+# GOD SYSTEM Bot ![](https://img.shields.io/badge/1.1-7393B3)
 ![](https://img.shields.io/badge/Developed_on-Disnake-blue) ![](https://img.shields.io/badge/VALORANT_API_by-Henrik_Mertens-red)
 
 Бот для себя и друзей
@@ -71,6 +71,7 @@
     - Счет команды запрашиваемого пользователя (['game_{game_number}']['team_a'])
     - Счет противоположной команды (['game_{game_number}']['team_b'])
     - Изменение эло после игры (['game_{game_number}']['elo'])
+    - Ранг после игры (['game_{game_number}']['rank'])
     - Месяц, число и год игры (['game_{game_number}']['date'])
     - Всего побед (['game_{game_number}']['total_wins'])
     - Всего поражений (['game_{game_number}']['total_lose'])
