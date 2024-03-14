@@ -462,7 +462,7 @@ async def embeds_view(inter):
 
 
 @bot.slash_command(description='[EMBEDS] Информация о боте и его командах')
-async def newabout(inter):
+async def about(inter):
     pre_embed = disnake.Embed(title=f'{json.load(open("embed_templates.json"))["О боте"]["title"]}',
                               description=f'{json.load(open("embed_templates.json"))["О боте"]["desc"]}',
                               color=0xb2b2b2)
