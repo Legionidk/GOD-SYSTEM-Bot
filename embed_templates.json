@@ -129,8 +129,8 @@
     "desc": "",
     "fields_number": 11,
     "field_0": {
-      "name": "Модерация",
-      "value": "",
+      "name": "",
+      "value": "Модерация",
       "inline": "False"
     },
     "field_1": {
@@ -169,8 +169,8 @@
       "inline": "True"
     },
     "field_8": {
-      "name": "Экономика",
-      "value": "",
+      "name": "",
+      "value": "Экономика",
       "inline": "False"
     },
     "field_9": {
