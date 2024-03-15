@@ -10,7 +10,10 @@ def get_player_info(name, tag, region):
             requests.get(url=f'https://api.henrikdev.xyz/valorant/v2/mmr/{region}/{name}/{tag}').json()
         player_info = {
             'level': requested['data']['account_level'],
-            'card': requested['data']['card']['wide'],
+            'card': {
+                'wide': requested['data']['card']['wide'],
+                'small': requested['data']['card']['small']
+            },
             'current_rank': requested_rating['data']['current_data']['currenttierpatched'],
             'current_rank_icon': requested_rating['data']['current_data']['images']['large'],
             'current_elo': requested_rating['data']['current_data']['ranking_in_tier'],
@@ -31,9 +34,6 @@ def get_matches(name, tag, region):
         requested_elo_changes = requests.get(url=f'https://api.henrikdev.xyz/valorant/v1/mmr-history/'
                                                  f'{region}/{name}/{tag}').json()
         matches = {}
-        total_wins = 0
-        total_lose = 0
-        total_ff = 0
         total_kills = 0
         total_deaths = 0
         total_elo = 0
@@ -41,25 +41,19 @@ def get_matches(name, tag, region):
             if requested_matches['data'][c]['stats']['team'] == 'Red':
                 if requested_matches['data'][c]['teams']['red'] <= requested_matches['data'][c]['teams']['blue']:
                     result = 'Поражение'
-                    total_lose += 1
                 elif requested_matches['data'][c]['teams']['red'] == requested_matches['data'][c]['teams']['blue']:
                     result = 'Ничья'
-                    total_ff += 1
                 else:
                     result = 'Победа'
-                    total_wins += 1
                 team_a = requested_matches['data'][c]['teams']['red']
                 team_b = requested_matches['data'][c]['teams']['blue']
             else:
                 if requested_matches['data'][c]['teams']['blue'] <= requested_matches['data'][c]['teams']['red']:
                     result = 'Поражение'
-                    total_lose += 1
                 elif requested_matches['data'][c]['teams']['blue'] == requested_matches['data'][c]['teams']['red']:
                     result = 'Ничья'
-                    total_ff += 1
                 else:
                     result = 'Победа'
-                    total_wins += 1
                 team_a = requested_matches['data'][c]['teams']['blue']
                 team_b = requested_matches['data'][c]['teams']['red']
             matches[f'game_{c}'] = {
@@ -83,9 +77,6 @@ def get_matches(name, tag, region):
             total_kills += requested_matches['data'][c]['stats']['kills']
             total_deaths += requested_matches['data'][c]['stats']['deaths']
             total_elo += requested_elo_changes['data'][c]['mmr_change_to_last_game']
-        matches['total_wins'] = total_wins
-        matches['total_lose'] = total_lose
-        matches['total_ff'] = total_ff
         matches['total_k/d'] = round(total_kills / total_deaths, 2)
         matches['total_elo'] = total_elo
     return matches
