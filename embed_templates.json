@@ -127,7 +127,7 @@
     "pass": "true",
     "title": "Админские команды",
     "desc": "",
-    "fields_number": 12,
+    "fields_number": 11,
     "field_0": {
       "name": "Модерация",
       "value": "",
@@ -169,21 +169,16 @@
       "inline": "True"
     },
     "field_8": {
-      "name": "",
-      "value": "",
-      "inline": "False"
-    },
-    "field_9": {
       "name": "Экономика",
       "value": "",
       "inline": "False"
     },
-    "field_10": {
+    "field_9": {
       "name": ".godgive [amount: int] [@member]",
       "value": "Выдает валюту",
       "inline": "True"
     },
-    "field_11": {
+    "field_10": {
       "name": ".godtake [amount: int] [@member]",
       "value": "Забирает валюту",
       "inline": "True"
@@ -192,16 +187,16 @@
   "Список изменений": {
     "pass": "true",
     "title": "Список изменений",
-    "desc": "Stable v1.1",
+    "desc": "Stable v1.1.1",
     "fields_number": 2,
     "field_0": {
       "name": "Обновления бота",
-      "value": "- Теперь в статус бота передается его версия\n- Слеш команды теперь глобальны (работают на всех серверах)\n- Переработан embed для /valmatches\n- Переработана команда /about\n- Переработаны команды .embed и .embeds_view\n  - Теперь в пресетах необязательно выставлять параметру 'desc' значение 'none', можно оставить его пустым ('') - будет тот же эффект, что был при 'none'\n  - Добавлена проверка на пользователя (теперь команды смогут использовать только разрешенные id)\n  - Добавлена проверка разрешения использования пресетов для этих команд\n    - Для самих пресетов из embed_templates.json теперь обязателен новый параметр 'pass': 'true'/'false' (если false: оно не появляется в списке .embeds_view и не может быть использовано в .embed, true: противоположно)",
+      "value": "- Переработан embed для всех команд VALORANT",
       "inline": "False"
     },
     "field_1": {
       "name": "Обновления скриптов",
-      "value": "- Скрипт valorant_system.get_matches теперь отдает информацию о ранге",
+      "value": "- valorant.get_player_info\n  - Теперь скрипт отдает две карточки игрока (player_info['card']['wide'] и player_info['card']['small'])\n  - Скрипт больше не отдает информацию об общем кол-ве побед, поражений и ничьи",
       "inline": "False"
     }
   }
