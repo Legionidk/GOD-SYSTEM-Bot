@@ -1,4 +1,4 @@
-# GOD SYSTEM Bot ![](https://img.shields.io/badge/1.1-7393B3)
+# GOD SYSTEM Bot ![](https://img.shields.io/badge/1.1.1-7393B3)
 ![](https://img.shields.io/badge/Developed_on-Disnake-blue) ![](https://img.shields.io/badge/VALORANT_API_by-Henrik_Mertens-red)
 
 Бот для себя и друзей
@@ -51,7 +51,7 @@
 - .get_player_info(name: str, tag: str, region: str) - возвращает словарь с краткой информацией о запрашиваемом пользователе
   - Возвращает
     - Уровень ('level')
-    - Широкую версию карточки ('card': 'url')
+    - Карточку в двух версиях (['card']['wide'] и ['card']['small'])
     - Текущий ранг ('current_rank')
     - Иконку текущего ранга ('current_rank_icon': 'url')
     - Текущее эло ('current_elo)
@@ -73,8 +73,5 @@
     - Изменение эло после игры (['game_{game_number}']['elo'])
     - Ранг после игры (['game_{game_number}']['rank'])
     - Месяц, число и год игры (['game_{game_number}']['date'])
-    - Всего побед (['game_{game_number}']['total_wins'])
-    - Всего поражений (['game_{game_number}']['total_lose'])
-    - Всего игр в ничью (['game_{game_number}']['total_ff'])
     - Общее К/Д (['game_{game_number}']['total_k/d'])
     - Общее изменение эло (['game_{game_number}']['total_elo'])
