@@ -44,7 +44,6 @@ class About(disnake.ui.StringSelect):
         )
 
     async def callback(self, inter: disnake.MessageInteraction):
-        await inter.response.defer()
         pre_embed = disnake.Embed(title=f'{json.load(open("embed_templates.json"))[self.values[0]]["title"]}',
                                   description=f'{json.load(open("embed_templates.json"))[self.values[0]]["desc"]}',
                                   color=0xb2b2b2)
