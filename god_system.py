@@ -44,6 +44,7 @@ class About(disnake.ui.StringSelect):
         )
 
     async def callback(self, inter: disnake.MessageInteraction):
+        await inter.response.defer()
         pre_embed = disnake.Embed(title=f'{json.load(open("embed_templates.json"))[self.values[0]]["title"]}',
                                   description=f'{json.load(open("embed_templates.json"))[self.values[0]]["desc"]}',
                                   color=0xb2b2b2)
@@ -58,7 +59,7 @@ class About(disnake.ui.StringSelect):
                 value=json.load((
                     open('embed_templates.json')))[f'{self.values[0]}'][f'field_{c}']['value'],
                 inline=inline)
-        pre_embed.set_image(file=disnake.File('png/main.png'))
+        pre_embed.set_image(file=disnake.File('png/main.gif'))
         pre_embed.set_footer(text='lgnlgnlgn')
         await inter.response.edit_message(embed=pre_embed)
         print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает информацию о боте (вкладка {self.values[0]})')
@@ -463,6 +464,7 @@ async def embeds_view(inter):
 
 @bot.slash_command(description='[EMBEDS] Информация о боте и его командах')
 async def about(inter):
+    await inter.response.defer()
     pre_embed = disnake.Embed(title=f'{json.load(open("embed_templates.json"))["О боте"]["title"]}',
                               description=f'{json.load(open("embed_templates.json"))["О боте"]["desc"]}',
                               color=0xb2b2b2)
@@ -474,7 +476,7 @@ async def about(inter):
         pre_embed.add_field(name=json.load((open('embed_templates.json')))['О боте'][f'field_{c}']['name'],
                             value=json.load((open('embed_templates.json')))['О боте'][f'field_{c}']['value'],
                             inline=inline)
-    pre_embed.set_image(file=disnake.File('png/main.png'))
+    pre_embed.set_image(file=disnake.File('png/main.gif'))
     pre_embed.set_footer(text='lgnlgnlgn')
     await inter.send(embed=pre_embed, view=AboutView())
     print(f'[GOD SYSTEM] [EMBEDS] {inter.author.id} просматривает информацию о боте (первое использование)')
