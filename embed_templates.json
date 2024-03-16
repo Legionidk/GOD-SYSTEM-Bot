@@ -12,7 +12,7 @@
       "name": "name of field 2",
       "value": "value of field 2"
     },
-    "image": "png/main.png",
+    "image": "png/main.gif",
     "buttons_number": 2,
 	"button_0": {
       "label": "test button 1",
