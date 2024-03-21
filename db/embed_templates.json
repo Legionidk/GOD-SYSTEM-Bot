@@ -1,1 +1,203 @@
-
+{
+  "Test": {
+    "pass": "false",
+    "title": "title test",
+    "desc": "desc test",
+    "fields_number": 2,
+    "field_0": {
+      "name": "name of field 1",
+      "value": "value of field 1"
+    },
+    "field_1": {
+      "name": "name of field 2",
+      "value": "value of field 2"
+    },
+    "image": "png/main.gif",
+    "buttons_number": 2,
+	"button_0": {
+      "label": "test button 1",
+      "url": "https://url_of_test_button_1.com/"
+    },
+    "button_1": {
+      "label": "test button 2",
+      "url": "https://url_of_test_button_2.com/"
+    },
+    "footer": "true",
+	"text": "lgnlgnlgn"
+  },
+  "О боте": {
+    "pass": "true",
+    "title": "GOD SYSTEM Bot",
+    "desc": "Stable v1.1.1",
+    "fields_number": 6,
+    "field_0": {
+      "name": "Developed by",
+      "value": "<@399839515134525440>",
+      "inline": "True"
+    },
+    "field_1": {
+      "name": "Developed on",
+      "value": "Python (disnake)",
+      "inline": "True"
+    },
+    "field_2": {
+      "name": "",
+      "value": "",
+      "inline": "False"
+    },
+    "field_3": {
+      "name": "VALORANT API by",
+      "value": "[Henrik Mertens](https://github.com/Henrik-3/unofficial-valorant-api)",
+      "inline": "True"
+    },
+    "field_4": {
+      "name": "Hosted on",
+      "value": "[pylexnodes.net](https://client.pylexnodes.net/)",
+      "inline": "True"
+    },
+    "field_5": {
+      "name": "Source code",
+      "value": "[github.com](https://github.com/Legionidk/GOD-SYSTEM-Bot)",
+      "inline": "False"
+    }
+  },
+  "Команды экономики": {
+    "pass": "true",
+    "title": "Команды экономики",
+    "desc": "",
+    "fields_number": 8,
+    "field_0": {
+      "name": "/registration",
+      "value": "Регистрация в боте",
+      "inline": "True"
+    },
+    "field_1": {
+      "name": "/balance",
+      "value": "Просмотр баланса",
+      "inline": "True"
+    },
+    "field_2": {
+      "name": "",
+      "value": "",
+      "inline": "False"
+    },
+    "field_3": {
+      "name": "/transfer [сумма] [получтель]",
+      "value": "Перевод пользователю",
+      "inline": "True"
+    },
+    "field_4": {
+      "name": "/antibomj",
+      "value": "Добирает пользователю баланс до установленного минимума (кд 24 часа)",
+      "inline": "True"
+    },
+    "field_5": {
+      "name": "",
+      "value": "",
+      "inline": "False"
+    },
+    "field_6": {
+      "name": "/taxi",
+      "value": "Работа таксистом (оплата 5.000, кд 30 минут)",
+      "inline": "True"
+    },
+    "field_7": {
+      "name": "/factory",
+      "value": "Работа на заводе (оплата 10.000, кд 1 час)",
+      "inline": "True"
+    }
+  },
+  "Команды VALORANT": {
+    "pass": "true",
+    "title": "Команды VALORANT",
+    "desc": "",
+    "fields_number": 2,
+    "field_0": {
+      "name": "/valstats [ник] [тег] [регион]",
+      "value": "Краткий обзор профиля VALORANT",
+      "inline": "True"
+    },
+    "field_1": {
+      "name": "valmatches [ник] [тег] [регион]",
+      "value": "Отображает последние 5 рейтинговых игр",
+      "inline": "True"
+    }
+  },
+  "Админские команды": {
+    "pass": "true",
+    "title": "Админские команды",
+    "desc": "",
+    "fields_number": 11,
+    "field_0": {
+      "name": "",
+      "value": "Модерация",
+      "inline": "False"
+    },
+    "field_1": {
+      "name": ".mute [@member] [hours: int]",
+      "value": "Выдает тайм-аут пользователю на указанное кол-во часов (минимально 1, максимально 672)",
+      "inline": "True"
+    },
+    "field_2": {
+      "name": ".unmute [@member]",
+      "value": "Убирает тайм-аут с пользователя",
+      "inline": "True"
+    },
+    "field_3": {
+      "name": "",
+      "value": "",
+      "inline": "False"
+    },
+    "field_4": {
+      "name": ".kick [@member]",
+      "value": "Кикает пользователя",
+      "inline": "True"
+    },
+    "field_5": {
+      "name": ".ban [@member]",
+      "value": "Банит пользвателя",
+      "inline": "True"
+    },
+    "field_6": {
+      "name": "",
+      "value": "",
+      "inline": "False"
+    },
+    "field_7": {
+      "name": ".clear [amount: int]",
+      "value": "Очищает указанное кол-во сообщений",
+      "inline": "True"
+    },
+    "field_8": {
+      "name": "",
+      "value": "Экономика",
+      "inline": "False"
+    },
+    "field_9": {
+      "name": ".godgive [amount: int] [@member]",
+      "value": "Выдает валюту",
+      "inline": "True"
+    },
+    "field_10": {
+      "name": ".godtake [amount: int] [@member]",
+      "value": "Забирает валюту",
+      "inline": "True"
+    }
+  },
+  "Список изменений": {
+    "pass": "true",
+    "title": "Список изменений",
+    "desc": "Stable v1.1.1",
+    "fields_number": 2,
+    "field_0": {
+      "name": "Обновления бота",
+      "value": "- Переработан embed для всех команд VALORANT",
+      "inline": "False"
+    },
+    "field_1": {
+      "name": "Обновления скриптов",
+      "value": "- valorant.get_player_info\n  - Теперь скрипт отдает две карточки игрока (player_info['card']['wide'] и player_info['card']['small'])\n  - Скрипт больше не отдает информацию об общем кол-ве побед, поражений и ничьи",
+      "inline": "False"
+    }
+  }
+}
