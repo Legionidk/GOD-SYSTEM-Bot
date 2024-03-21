@@ -1,4 +1,4 @@
-# GOD SYSTEM Bot ![](https://img.shields.io/badge/1.1.1-7393B3)
+# GOD SYSTEM Bot ![](https://img.shields.io/badge/1.1.2-7393B3)
 ![](https://img.shields.io/badge/Developed_on-Disnake-blue) ![](https://img.shields.io/badge/VALORANT_API_by-Henrik_Mertens-red)
 
 Бот для себя и друзей
